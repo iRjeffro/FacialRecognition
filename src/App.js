@@ -1,9 +1,9 @@
 import React, { Component } from 'react';
-import Navigation from './Navigation/Navigation';
-import Logo from './Logo/Logo';
-import ImageLinkForm from './ImageLinkForm/ImageLinkForm';
-import Rank from './Rank/Rank';
-import FaceRecognition from './FaceRecognition/FaceRecognition';
+import Navigation from './components/Navigation/Navigation';
+import Logo from './components/Logo/Logo';
+import ImageLinkForm from './components/ImageLinkForm/ImageLinkForm';
+import Rank from './components/Rank/Rank';
+import FaceRecognition from './components/FaceRecognition/FaceRecognition';
 import ParticlesBg from 'particles-bg';
 import './App.css';
 

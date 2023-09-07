@@ -41,33 +41,44 @@ const setupFacialRec = (imageUrl) => {
 }
 
 
-
-
 function App() {
   const [imageLink, setImageLink] = useState('');
-  const [imageUrl, setImageUrl] = useState('');  
+  const [imageUrl, setImageUrl] = useState('');
+  const [box, setBox] = useState({});
+
+  const calculateFaceLocation = (data) => {
+    const foundFaceAll = [];
+    for (let i=0;i<data.outputs.length;i++) {
+      let foundFace = data.outputs[i];
+      console.log(foundFace);
+    }
+    
+    const clariFace = data.outputs[0].data.regions[0].region_info.bounding_box;
+    const image = document.getElementById('inputimage');
+    const width = Number(image.width);
+    const height = Number(image.height);
+    return {
+      leftCol: clariFace.left_col * width,
+      topRow: clariFace.top_row * height,
+      rightCol: width - (clariFace.right_col * width),
+      bottomRow: height - (clariFace.bottom_row * height),
+    }
+  }
+
+  const displayBox = (obj) => {
+    setBox(obj);
+  }
+
   const onInputChange = (e) => {
     setImageLink(e.target.value);
   };
+
   const submitForm = () => {
     setImageUrl(imageLink);
     fetch("https://api.clarifai.com/v2/models/" + 'face-detection' + "/outputs", setupFacialRec(imageLink))
       .then(response => response.json())
-      .then(response => {
-        console.log('hi', response)
-      })
-      .catch(err => console.log(err));
-    //   .then(
-    //   function(response) {
-    //     console.log(response);
-    //   },
-    //   function(err) {
-
-    //   }
-    // );
-
-    // fetch("https://api.clarifai.com/v2/models/" + MODEL_ID + "/outputs", requestOptions)
-//    
+      .then(response => displayBox(calculateFaceLocation(response)))
+      .catch(err => console.log(err))
   };
 
   return (
@@ -78,7 +89,7 @@ function App() {
       <Rank />
       <ImageLinkForm onInputChange={onInputChange} 
         submitForm={submitForm} />
-      <FaceRecognition imageUrl={imageUrl} />
+      <FaceRecognition box={box} imageUrl={imageUrl} />
     </div>
   );
 }

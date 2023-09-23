@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
 import Navigation from './components/Navigation/Navigation';
+import SignIn from './components/SignIn/SignIn'
+import Register from './components/Register/Register'
 import Logo from './components/Logo/Logo';
 import ImageLinkForm from './components/ImageLinkForm/ImageLinkForm';
 import Rank from './components/Rank/Rank';
@@ -45,24 +47,37 @@ function App() {
   const [imageLink, setImageLink] = useState('');
   const [imageUrl, setImageUrl] = useState('');
   const [box, setBox] = useState({});
+  const [route, setRoute] = useState('signin');
+  const [dims, setDims] = useState({});
 
   const calculateFaceLocation = (data) => {
     const foundFaceAll = [];
-    for (let i=0;i<data.outputs.length;i++) {
-      let foundFace = data.outputs[i];
-      console.log(foundFace);
+    for (let i=0; i<data.outputs[0].data.regions.length; i++) {
+      let foundFace = data.outputs[0].data.regions[i].region_info.bounding_box;
+      foundFaceAll.push(foundFace);
     }
+
+    // test images below
     
-    const clariFace = data.outputs[0].data.regions[0].region_info.bounding_box;
+    // https://d.newsweek.com/en/full/317741/beautiful-faces.webp?w=961&f=d1cb527319916fbbad2ae014ad71570f
+
+    // https://mymodernmet.com/wp/wp-content/uploads/2019/09/100k-ai-faces-2.png
+    
     const image = document.getElementById('inputimage');
     const width = Number(image.width);
     const height = Number(image.height);
-    return {
-      leftCol: clariFace.left_col * width,
-      topRow: clariFace.top_row * height,
-      rightCol: width - (clariFace.right_col * width),
-      bottomRow: height - (clariFace.bottom_row * height),
+    const faceDims = { };
+
+    for (let i=0; i<foundFaceAll.length; i++) {
+      const clariFace = foundFaceAll[i];
+      faceDims[i] = {
+        leftCol: clariFace.left_col * width,
+        topRow: clariFace.top_row * height,
+        rightCol: width - (clariFace.right_col * width),
+        bottomRow: height - (clariFace.bottom_row * height)
+      }
     }
+    setDims(faceDims);
   }
 
   const displayBox = (obj) => {
@@ -81,15 +96,42 @@ function App() {
       .catch(err => console.log(err))
   };
 
+  const onRouteChange = () => {
+    setRoute('home');
+  }
+
+  const onRegister = () => {
+    setRoute('register');
+  }
+
+  const onSignOut = () => {
+    setRoute('signin');
+  }
+
   return (
     <div className="App">
       <ParticlesBg type="cobweb" bg={true} />
-      <Navigation />
-      <Logo />
-      <Rank />
-      <ImageLinkForm onInputChange={onInputChange} 
-        submitForm={submitForm} />
-      <FaceRecognition box={box} imageUrl={imageUrl} />
+      { route === 'signin'
+      ? <div>
+          <Logo />
+          <SignIn onRouteChange={onRouteChange} onRegister={onRegister} />
+        </div>
+      : (
+          route === 'register'
+          ? <div>
+              <Logo />
+              <Register onRegister={onRegister} onSignOut={onSignOut} />
+            </div>
+          : <div>
+              <Navigation onSignOut={onSignOut} />
+              <Logo />
+              <Rank />
+              <ImageLinkForm onInputChange={onInputChange} 
+                submitForm={submitForm} />
+              <FaceRecognition dims={dims} imageUrl={imageUrl} />
+            </div>
+        )    
+      }
     </div>
   );
 }

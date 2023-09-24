@@ -56,12 +56,6 @@ function App() {
       let foundFace = data.outputs[0].data.regions[i].region_info.bounding_box;
       foundFaceAll.push(foundFace);
     }
-
-    // test images below
-    
-    // https://d.newsweek.com/en/full/317741/beautiful-faces.webp?w=961&f=d1cb527319916fbbad2ae014ad71570f
-
-    // https://mymodernmet.com/wp/wp-content/uploads/2019/09/100k-ai-faces-2.png
     
     const image = document.getElementById('inputimage');
     const width = Number(image.width);
@@ -106,6 +100,10 @@ function App() {
 
   const onSignOut = () => {
     setRoute('signin');
+    setImageLink('');
+    setImageUrl('');
+    setBox({});
+    setDims({});
   }
 
   return (

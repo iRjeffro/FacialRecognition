@@ -12,8 +12,7 @@ import './App.css';
 const setupFacialRec = (imageUrl) => {
   const PAT = '79f95e79e73c49099fc18d28d20e2b72';
   const USER_ID = 'irjeffro';       
-  const APP_ID = 'FaceRec';
-  const MODEL_ID = 'face-detection'; 
+  const APP_ID = 'FaceRec'; 
   const IMAGE_URL = imageUrl;
   const raw = JSON.stringify({
       "user_app_id": {
@@ -46,7 +45,6 @@ const setupFacialRec = (imageUrl) => {
 function App() {
   const [imageLink, setImageLink] = useState('');
   const [imageUrl, setImageUrl] = useState('');
-  const [box, setBox] = useState({});
   const [route, setRoute] = useState('signin');
   const [dims, setDims] = useState({});
   const [userData, setUserData] = useState({username: '', password: '', email: ''});
@@ -66,6 +64,7 @@ function App() {
     for (let i=0; i<foundFaceAll.length; i++) {
       const clariFace = foundFaceAll[i];
       faceDims[i] = {
+        id: 'face' + (i + 1),
         leftCol: clariFace.left_col * width,
         topRow: clariFace.top_row * height,
         rightCol: width - (clariFace.right_col * width),
@@ -75,19 +74,16 @@ function App() {
     setDims(faceDims);
   }
 
-  const displayBox = (obj) => {
-    setBox(obj);
-  }
-
   const onInputChange = (e) => {
     setImageLink(e.target.value);
   };
 
   const submitForm = () => {
+    const MODEL_ID = 'face-detection';
     setImageUrl(imageLink);
-    fetch("https://api.clarifai.com/v2/models/" + 'face-detection' + "/outputs", setupFacialRec(imageLink))
+    fetch("https://api.clarifai.com/v2/models/" + MODEL_ID + "/outputs", setupFacialRec(imageLink))
       .then(response => response.json())
-      .then(response => displayBox(calculateFaceLocation(response)))
+      .then(response => calculateFaceLocation(response))
       .catch(err => console.log(err))
   };
 
@@ -102,7 +98,6 @@ function App() {
     setRoute('signin');
     setImageLink('');
     setImageUrl('');
-    setBox({});
     setDims({});
   }
 

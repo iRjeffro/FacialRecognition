@@ -6,6 +6,7 @@ const FaceRecognition = ({ imageUrl, dims }) => {
     const finalDims = [];
     for (let [face, properties] of Object.entries(dims)) {
         finalDims[face] = {
+            id: properties.id,
             top: properties.topRow,
             bottom: properties.bottomRow,
             right: properties.rightCol,
@@ -14,7 +15,7 @@ const FaceRecognition = ({ imageUrl, dims }) => {
     }
 
     let boxElems = finalDims.map((face) => {
-        return <div className='bounding-box' style={{top: face.top, bottom: face.bottom, left: face.left, right: face.right}}></div>
+        return <div className='bounding-box' key={face.id} style={{top: face.top, bottom: face.bottom, left: face.left, right: face.right}}></div>
     });
         
     return (

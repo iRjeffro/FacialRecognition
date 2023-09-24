@@ -1,7 +1,7 @@
 import React from "react";
 import 'tachyons';
 
-const SignIn = ({ onRouteChange, onRegister }) => {
+const SignIn = ({ onRegister, signIn, onSignInFields }) => {
     return (
         <article className="br3 ba dark-gray b--black-10 mv4 w-100 w-50-m w-25-l mw6 shadow-5 center">    
             <main className="pa4 black-80">
@@ -10,15 +10,15 @@ const SignIn = ({ onRouteChange, onRegister }) => {
                     <legend className="f1 fw6 ph0 mh0 center">Sign In</legend>
                     <div className="mt3">
                         <label className="db fw6 lh-copy f6" htmlFor="email-address">Email</label>
-                        <input className="pa2 input-reset ba bg-transparent hover-bg-black hover-white w-100" type="email" name="email-address"  id="email-address" placeholder="" />
+                        <input className="pa2 input-reset ba bg-transparent hover-bg-black hover-white w-100" type="email" name="email-address"  id="email-address" placeholder="" onChange={onSignInFields} />
                     </div>
                     <div className="mv3">
                         <label className="db fw6 lh-copy f6" htmlFor="password">Password</label>
-                        <input className="b pa2 input-reset ba bg-transparent hover-bg-black hover-white w-100" type="password" name="password"  id="password" />
+                        <input className="b pa2 input-reset ba bg-transparent hover-bg-black hover-white w-100" type="password" name="password"  id="password" onChange={onSignInFields} />
                     </div>
                     </fieldset>
                     <div className="">
-                        <input onClick={onRouteChange} className="b ph3 pv2 input-reset ba b--black bg-transparent grow pointer f6 dib" type="submit" value="Sign in" />
+                        <input onClick={signIn} className="b ph3 pv2 input-reset ba b--black bg-transparent grow pointer f6 dib" type="submit" value="Sign in" />
                     </div>
                     <div className="lh-copy mt3">
                         <a href="#0" className="f6 link dim black db" onClick={onRegister}>Register</a>

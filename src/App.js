@@ -49,6 +49,7 @@ function App() {
   const [box, setBox] = useState({});
   const [route, setRoute] = useState('signin');
   const [dims, setDims] = useState({});
+  const [userData, setUserData] = useState({username: '', password: '', email: ''});
 
   const calculateFaceLocation = (data) => {
     const foundFaceAll = [];
@@ -90,20 +91,69 @@ function App() {
       .catch(err => console.log(err))
   };
 
-  const onRouteChange = () => {
-    setRoute('home');
-  }
-
   const onRegister = () => {
+    setUserData({username: '', password: '', email: ''});
     setRoute('register');
+    console.log(userData);
   }
 
   const onSignOut = () => {
+    setUserData({username: '', password: '', email: ''});
     setRoute('signin');
     setImageLink('');
     setImageUrl('');
     setBox({});
     setDims({});
+  }
+
+  const signIn = () => {
+    if ((userData.email !== '') && (userData.password !== '')) {
+      setRoute('home');
+      setUserData({username: '', password: '', email: ''});
+    }
+  }
+
+  const onSignInFields = (e) => {
+    if (e.target.id === 'email-address') {
+      setUserData({
+        email: e.target.value,
+        password: userData.password
+      });
+    } else {
+      setUserData({
+        email: userData.email,
+        password: e.target.value
+      });
+    }
+  }
+
+  const regUser = () => {
+    if ((userData.username !== '') && (userData.email !== '') && (userData.password !== '')) {
+        setRoute('signin');
+        setUserData({username: '', password: '', email: ''});
+    }
+  }
+
+  const onRegisterFields = (e) => {
+    if (e.target.id === 'name') {
+      setUserData({
+        username: e.target.value,
+        email: userData.email,
+        password: userData.password
+      });
+    } else if (e.target.id === 'email') {
+      setUserData({
+        username: userData.username,
+        email: e.target.value,
+        password: userData.password
+      });
+    } else if (e.target.id === 'password') {
+      setUserData({
+        username: userData.username,
+        email: userData.email,
+        password: e.target.value
+      });
+    }
   }
 
   return (
@@ -112,13 +162,13 @@ function App() {
       { route === 'signin'
       ? <div>
           <Logo />
-          <SignIn onRouteChange={onRouteChange} onRegister={onRegister} />
+          <SignIn onRegister={onRegister} signIn={signIn} onSignInFields={onSignInFields} />
         </div>
       : (
           route === 'register'
           ? <div>
               <Logo />
-              <Register onRegister={onRegister} onSignOut={onSignOut} />
+              <Register onRegisterFields={onRegisterFields} onRegister={onRegister} regUser={regUser} onSignOut={onSignOut} />
             </div>
           : <div>
               <Navigation onSignOut={onSignOut} />

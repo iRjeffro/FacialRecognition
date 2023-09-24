@@ -29,5 +29,3 @@ const FaceRecognition = ({ imageUrl, dims }) => {
 };
 
 export default FaceRecognition;
-
-// 

@@ -41,7 +41,6 @@ const setupFacialRec = (imageUrl) => {
   return requestOptions;
 }
 
-
 function App() {
   const [imageLink, setImageLink] = useState('');
   const [imageUrl, setImageUrl] = useState('');

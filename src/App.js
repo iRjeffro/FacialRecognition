@@ -104,10 +104,12 @@ function App() {
           })
           .then(response => response.json())
           .then(count => {
-            return setUserData(Object.assign(userData, {entries: count}));
+            setUserData(Object.assign(userData, {entries: count}));
           })
+          .catch(err => console.log(err))
         }
         calculateFaceLocation(response);
+        loadUser(userData);
       })
       .catch(err => console.log(err))
   };

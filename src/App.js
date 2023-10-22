@@ -46,8 +46,19 @@ function App() {
   const [imageUrl, setImageUrl] = useState('');
   const [route, setRoute] = useState('signin');
   const [dims, setDims] = useState({});
-  const [userData, setUserData] = useState({username: '', password: '', email: ''});
+  const [userData, setUserData] = useState({id: '', name: '', email: '', entries: 0, joined: ''});
 
+  const loadUser = (data) => {
+    setUserData({
+      id: data.id, 
+      name: data.name, 
+      email: data.email, 
+      entries: data.entries, 
+      joined: data.joined
+    });
+    return userData;
+  }
+  
   const calculateFaceLocation = (data) => {
     const foundFaceAll = [];
     for (let i=0; i<data.outputs[0].data.regions.length; i++) {
@@ -82,18 +93,30 @@ function App() {
     setImageUrl(imageLink);
     fetch("https://api.clarifai.com/v2/models/" + MODEL_ID + "/outputs", setupFacialRec(imageLink))
       .then(response => response.json())
-      .then(response => calculateFaceLocation(response))
+      .then(response => {
+        if (response) {
+          fetch('http://localhost:3000/image', {
+            method: 'put',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({
+              id: userData.id
+            })
+          })
+          .then(response => response.json())
+          .then(count => {
+            return setUserData(Object.assign(userData, {entries: count}));
+          })
+        }
+        calculateFaceLocation(response);
+      })
       .catch(err => console.log(err))
   };
 
   const onRegister = () => {
-    setUserData({username: '', password: '', email: ''});
     setRoute('register');
-    console.log(userData);
   }
 
   const onSignOut = () => {
-    setUserData({username: '', password: '', email: ''});
     setRoute('signin');
     setImageLink('');
     setImageUrl('');
@@ -101,53 +124,7 @@ function App() {
   }
 
   const signIn = () => {
-    if ((userData.email !== '') && (userData.password !== '')) {
-      setRoute('home');
-      setUserData({username: '', password: '', email: ''});
-    }
-  }
-
-  const onSignInFields = (e) => {
-    if (e.target.id === 'email-address') {
-      setUserData({
-        email: e.target.value,
-        password: userData.password
-      });
-    } else {
-      setUserData({
-        email: userData.email,
-        password: e.target.value
-      });
-    }
-  }
-
-  const regUser = () => {
-    if ((userData.username !== '') && (userData.email !== '') && (userData.password !== '')) {
-        setRoute('signin');
-        setUserData({username: '', password: '', email: ''});
-    }
-  }
-
-  const onRegisterFields = (e) => {
-    if (e.target.id === 'name') {
-      setUserData({
-        username: e.target.value,
-        email: userData.email,
-        password: userData.password
-      });
-    } else if (e.target.id === 'email') {
-      setUserData({
-        username: userData.username,
-        email: e.target.value,
-        password: userData.password
-      });
-    } else if (e.target.id === 'password') {
-      setUserData({
-        username: userData.username,
-        email: userData.email,
-        password: e.target.value
-      });
-    }
+    setRoute('home');
   }
 
   return (
@@ -156,18 +133,18 @@ function App() {
       { route === 'signin'
       ? <div>
           <Logo />
-          <SignIn onRegister={onRegister} signIn={signIn} onSignInFields={onSignInFields} />
+          <SignIn onRegister={onRegister} signIn={signIn} loadUser={loadUser} />
         </div>
       : (
           route === 'register'
           ? <div>
               <Logo />
-              <Register onRegisterFields={onRegisterFields} onRegister={onRegister} regUser={regUser} onSignOut={onSignOut} />
+              <Register signIn={signIn} onRegister={onRegister} loadUser={loadUser} onSignOut={onSignOut} />
             </div>
           : <div>
               <Navigation onSignOut={onSignOut} />
               <Logo />
-              <Rank />
+              <Rank name={userData.name} entries={userData.entries} />
               <ImageLinkForm onInputChange={onInputChange} 
                 submitForm={submitForm} />
               <FaceRecognition dims={dims} imageUrl={imageUrl} />

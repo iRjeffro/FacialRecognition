@@ -9,37 +9,6 @@ import FaceRecognition from './components/FaceRecognition/FaceRecognition';
 import ParticlesBg from 'particles-bg';
 import './App.css';
 
-const setupFacialRec = (imageUrl) => {
-  const PAT = '79f95e79e73c49099fc18d28d20e2b72';
-  const USER_ID = 'irjeffro';       
-  const APP_ID = 'FaceRec'; 
-  const IMAGE_URL = imageUrl;
-  const raw = JSON.stringify({
-      "user_app_id": {
-          "user_id": USER_ID,
-          "app_id": APP_ID
-      },
-      "inputs": [
-          {
-              "data": {
-                  "image": {
-                      "url": IMAGE_URL
-                  }
-              }
-          }
-      ]
-  });
-
-  const requestOptions = {
-      method: 'POST',
-      headers: {
-          'Accept': 'application/json',
-          'Authorization': 'Key ' + PAT
-      },
-      body: raw
-  };
-  return requestOptions;
-}
 
 function App() {
   const [imageLink, setImageLink] = useState('');
@@ -89,29 +58,36 @@ function App() {
   };
 
   const submitForm = () => {
-    const MODEL_ID = 'face-detection';
     setImageUrl(imageLink);
-    fetch("https://api.clarifai.com/v2/models/" + MODEL_ID + "/outputs", setupFacialRec(imageLink))
-      .then(response => response.json())
-      .then(response => {
-        if (response) {
-          fetch('http://localhost:3000/image', {
-            method: 'put',
-            headers: {'Content-Type': 'application/json'},
-            body: JSON.stringify({
-              id: userData.id
-            })
-          })
-          .then(response => response.json())
-          .then(count => {
-            setUserData(Object.assign(userData, {entries: count}));
-          })
-          .catch(err => console.log(err))
-        }
-        calculateFaceLocation(response);
-        loadUser(userData);
+    if (imageLink) {
+      fetch('http://localhost:3000/imageurl', {
+              method: 'post',
+              headers: {'Content-Type': 'application/json'},
+              body: JSON.stringify({
+                input: imageUrl
+              })
       })
-      .catch(err => console.log(err))
+        .then(response => response.json())
+        .then(response => {
+          if (response) {
+            fetch('http://localhost:3000/image', {
+              method: 'put',
+              headers: {'Content-Type': 'application/json'},
+              body: JSON.stringify({
+                id: userData.id
+              })
+            })
+            .then(response => response.json())
+            .then(count => {
+              setUserData(Object.assign(userData, {entries: count}));
+              loadUser(userData);
+            })
+            .catch(err => console.log(err))
+          }
+          calculateFaceLocation(response);
+        })
+        .catch(err => console.log(err))
+    }
   };
 
   const onRegister = () => {

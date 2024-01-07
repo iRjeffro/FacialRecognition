@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # Getting Started with Create React App
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
@@ -68,3 +69,8 @@ This section has moved here: [https://facebook.github.io/create-react-app/docs/d
 ### `npm run build` fails to minify
 
 This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+=======
+#This is a facial recognition web application I created as part of my coursework. It uses an AI API tool to identify faces on pictures the user submits via image url.
+#This web app includes a sign in and registration page, which stores user data, encrypted, and stored in a database.
+#The app includes a node.js backend and postgreSQL database.
+>>>>>>> 485b6a488d03c8de705ed8a001fad559e21dc487

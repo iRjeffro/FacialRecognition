@@ -60,7 +60,7 @@ function App() {
   const submitForm = () => {
     setImageUrl(imageLink);
     if (imageLink) {
-      fetch('https://irjeffro.github.io/FacialRecognition/imageurl', {
+      fetch('https://facerec.jeffrodev.com/imageurl', {
               method: 'post',
               headers: {'Content-Type': 'application/json'},
               body: JSON.stringify({
@@ -70,7 +70,7 @@ function App() {
         .then(response => response.json())
         .then(response => {
           if (response) {
-            fetch('https://irjeffro.github.io/FacialRecognition/image', {
+            fetch('https://facerec.jeffrodev.com/image', {
               method: 'put',
               headers: {'Content-Type': 'application/json'},
               body: JSON.stringify({

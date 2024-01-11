@@ -24,7 +24,7 @@ class Register extends React.Component {
     }
 
     registerUser = () => {
-        fetch('http://localhost:3000/register', {
+        fetch('http://54.191.104.56/register', {
             method: 'post',
             headers: {'Content-Type': 'application/json'},
             body: JSON.stringify({

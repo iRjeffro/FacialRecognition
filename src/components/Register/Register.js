@@ -24,9 +24,7 @@ class Register extends React.Component {
     }
 
     registerUser = () => {
-        const apiURL = 'https://54.191.104.56/register';
-        const proxyURL = `https://crossorigin.me/${apiURL}`;
-        fetch(proxyURL, {
+        fetch('https://54.191.104.56/register', {
             method: 'post',
             headers: {
                 'Content-Type': 'application/json',

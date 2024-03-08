@@ -57,33 +57,33 @@ function App() {
     setImageLink(e.target.value);
   };
 
-  const submitForm = () => {
+  const submitForm = async () => {
     setImageUrl(imageLink);
     if (imageLink) {
-      fetch('https://irjeffro.github.io/FacialRecognition/imageurl', {
+      await fetch(`${process.env.REACT_APP_API_URL}/imageurl`, {
               method: 'post',
               headers: {'Content-Type': 'application/json'},
               body: JSON.stringify({
-                input: imageUrl
+                input: imageLink
               })
       })
         .then(response => response.json())
         .then(response => {
-          if (response) {
-            fetch('https://irjeffro.github.io/FacialRecognition/image', {
-              method: 'put',
-              headers: {'Content-Type': 'application/json'},
-              body: JSON.stringify({
-                id: userData.id
-              })
-            })
-            .then(response => response.json())
-            .then(count => {
-              setUserData(Object.assign(userData, {entries: count}));
-              loadUser(userData);
-            })
-            .catch(err => console.log(err))
-          }
+          // if (response) {
+          //   fetch('https://35.94.117.179/image', {
+          //     method: 'put',
+          //     headers: {'Content-Type': 'application/json'},
+          //     body: JSON.stringify({
+          //       id: userData.id
+          //     })
+          //   })
+          //   .then(response => response.json())
+          //   .then(count => {
+          //     setUserData(Object.assign(userData, {entries: count}));
+          //     loadUser(userData);
+          //   })
+          //   .catch(err => console.log(err))
+          // }
           calculateFaceLocation(response);
         })
         .catch(err => console.log(err))
@@ -108,26 +108,15 @@ function App() {
   return (
     <div className="App">
       <ParticlesBg type="cobweb" bg={true} />
-      { route === 'signin'
-      ? <div>
+      {
+        <div>
+          <Navigation onSignOut={onSignOut} />
           <Logo />
-          <SignIn onRegister={onRegister} signIn={signIn} loadUser={loadUser} />
+          <Rank name={userData.name} entries={userData.entries} />
+          <ImageLinkForm onInputChange={onInputChange} 
+            submitForm={submitForm} />
+          <FaceRecognition dims={dims} imageUrl={imageUrl} />
         </div>
-      : (
-          route === 'register'
-          ? <div>
-              <Logo />
-              <Register signIn={signIn} onRegister={onRegister} loadUser={loadUser} onSignOut={onSignOut} />
-            </div>
-          : <div>
-              <Navigation onSignOut={onSignOut} />
-              <Logo />
-              <Rank name={userData.name} entries={userData.entries} />
-              <ImageLinkForm onInputChange={onInputChange} 
-                submitForm={submitForm} />
-              <FaceRecognition dims={dims} imageUrl={imageUrl} />
-            </div>
-        )    
       }
     </div>
   );

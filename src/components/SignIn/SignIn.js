@@ -22,7 +22,7 @@ class SignIn extends React.Component {
 
     onSubmitSignIn = (event) => {
         event.preventDefault();
-        fetch(`http://54.191.104.56/signin`, {
+        fetch(`${process.env.REACT_APP_API_URL}/signin`, {
             method: 'post',
             headers: {'Content-Type': 'application/json'},
             body: JSON.stringify({
@@ -32,7 +32,7 @@ class SignIn extends React.Component {
         })
             .then(response => response.json())
             .then(user => {
-                if (user.id) {
+                if (user.length) {
                     this.props.signIn();
                     this.props.loadUser(user);
                 }

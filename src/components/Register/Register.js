@@ -24,11 +24,10 @@ class Register extends React.Component {
     }
 
     registerUser = () => {
-        fetch('https://54.191.104.56/register', {
+        fetch(`${process.env.REACT_APP_API_URL}/register`, {
             method: 'post',
             headers: {
-                'Content-Type': 'application/json',
-                'Origin': 'https://irjeffro.github.io/FacialRecognition/'
+                'Content-Type': 'application/json'
             },
             body: JSON.stringify({
                 name: this.state.name,
@@ -38,7 +37,7 @@ class Register extends React.Component {
         })
             .then(response => response.json())
             .then(user => {
-                if (user.id) {
+                if (user.name) {
                     this.props.loadUser(user);
                     this.props.signIn();
                 }

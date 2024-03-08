@@ -32,7 +32,7 @@ class SignIn extends React.Component {
         })
             .then(response => response.json())
             .then(user => {
-                console.log(user);
+                console.log(user.length);
                 if (user.length) {
                     this.props.signIn();
                     this.props.loadUser(user);

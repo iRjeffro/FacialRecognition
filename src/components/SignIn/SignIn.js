@@ -32,7 +32,6 @@ class SignIn extends React.Component {
         })
             .then(response => response.json())
             .then(user => {
-                console.log(user.validUser.id);
                 if (user.validUser.id) {
                     this.props.signIn();
                     this.props.loadUser(user.validUser);

@@ -6,9 +6,9 @@ const Rank = ({ name, entries }) => {
             <div className='white f1'>
                 {`Hello, ${name}!`}
             </div>
-            <div className='white f3'>
+            {/* <div className='white f3'>
                 {`Entries: ${entries}`}
-            </div>
+            </div> */}
         </div>
     )
 }

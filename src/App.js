@@ -105,31 +105,32 @@ function App() {
     setRoute('home');
   }
 
-return (
-  <div className="App">
-    <ParticlesBg type="cobweb" bg={true} />
-    { route === 'signin'
-    ? <div>
-        <Logo />
-        <SignIn onRegister={onRegister} signIn={signIn} loadUser={loadUser} />
-      </div>
-    : (
-        route === 'register'
-        ? <div>
-            <Logo />
-            <Register signIn={signIn} onRegister={onRegister} loadUser={loadUser} onSignOut={onSignOut} />
-          </div>
-        : <div>
-            <Navigation onSignOut={onSignOut} />
-            <Logo />
-            <Rank name={userData.name} entries={userData.entries} />
-            <ImageLinkForm onInputChange={onInputChange} 
-              submitForm={submitForm} />
-            <FaceRecognition dims={dims} imageUrl={imageUrl} />
-          </div>
-      )    
-    }
-  </div>
-);
+  return (
+    <div className="App">
+      <ParticlesBg type="cobweb" bg={true} />
+      { route === 'signin'
+      ? <div>
+          <Logo />
+          <SignIn onRegister={onRegister} signIn={signIn} loadUser={loadUser} />
+        </div>
+      : (
+          route === 'register'
+          ? <div>
+              <Logo />
+              <Register signIn={signIn} onRegister={onRegister} loadUser={loadUser} onSignOut={onSignOut} />
+            </div>
+          : <div>
+              <Navigation onSignOut={onSignOut} />
+              <Logo />
+              <Rank name={userData.name} entries={userData.entries} />
+              <ImageLinkForm onInputChange={onInputChange} 
+                submitForm={submitForm} />
+              <FaceRecognition dims={dims} imageUrl={imageUrl} />
+            </div>
+        )    
+      }
+    </div>
+  );
+}
 
 export default App;
